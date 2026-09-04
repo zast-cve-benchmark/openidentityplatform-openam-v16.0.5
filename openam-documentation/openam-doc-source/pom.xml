@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * The contents of this file are subject to the terms of the Common Development and
+ * Distribution License (the License). You may not use this file except in compliance with the
+ * License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
+ * specific language governing permission and limitations under the License.
+ *
+ * When distributing Covered Software, include this CDDL Header Notice in each file and include
+ * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
+ * Header, with the fields enclosed by brackets [] replaced by your own identifying
+ * information: "Portions copyright [year] [name of copyright owner]".
+ *
+ * Copyright 2011-2016 ForgeRock AS.
+ * Portions copyright 2024-2025 3A Systems LLC.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.openidentityplatform.openam</groupId>
+        <artifactId>openam-documentation</artifactId>
+        <version>16.0.5</version>
+    </parent>
+
+    <name>OpenAM Server Documentation Sources</name>
+
+    <artifactId>openam-doc-source</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        DocBook XML source for hand-written OpenAM core user documentation.
+    </description>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <phase>pre-site</phase>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.openidentityplatform.openam</groupId>
+                                    <artifactId>openam-doc-log-message-ref</artifactId>
+                                    <version>${project.version}</version>
+                                    <classifier>log-message-ref</classifier>
+                                    <outputDirectory>${project.build.directory}/docbkx-sources</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.openidentityplatform.openam</groupId>
+                                    <artifactId>openam-doc-ssoadm-ref</artifactId>
+                                    <version>${project.version}</version>
+                                    <classifier>ssoadm-ref</classifier>
+                                    <outputDirectory>${project.build.directory}/docbkx-sources</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-external-docs</id>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.openidentityplatform.openam</groupId>
+                                    <artifactId>openam-doc-services-ref</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <includes>*.adoc</includes> <!-- Optional filter -->
+                                    <outputDirectory>${project.build.directory}/asciidoc/source/reference</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>man-pages</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.openidentityplatform.commons</groupId>
+                        <artifactId>doc-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>build-man-pages-asciidoc</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>asciidoc-pre-process</goal>
+                                    <goal>antora</goal>
+                                    <goal>asciidoc-to-pdf</goal>
+                                </goals>
+                                <configuration>
+                                    <documents>
+                                        <document>getting-started</document>
+                                        <document>install-guide</document>
+                                        <document>upgrade-guide</document>
+                                        <document>admin-guide</document>
+                                        <document>dev-guide</document>
+                                        <document>deployment-planning</document>
+                                        <document>reference</document>
+                                        <document>web-users-guide</document>
+                                        <document>jee-users-guide</document>
+                                    </documents>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <projectName>OpenAM</projectName>
+                            <projectVersion>${project.version}</projectVersion>
+                            <releaseVersion>${project.version}</releaseVersion>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

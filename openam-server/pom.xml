@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * The contents of this file are subject to the terms of the Common Development and
+ * Distribution License (the License). You may not use this file except in compliance with the
+ * License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
+ * specific language governing permission and limitations under the License.
+ *
+ * When distributing Covered Software, include this CDDL Header Notice in each file and include
+ * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
+ * Header, with the fields enclosed by brackets [] replaced by your own identifying
+ * information: "Portions copyright [year] [name of copyright owner]".
+ *
+ * Copyright 2011-2016 ForgeRock AS.
+ * Portions copyright 2017-2025 3A Systems LLC.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Parent Project -->
+    <parent>
+        <groupId>org.openidentityplatform.openam</groupId>
+        <artifactId>openam</artifactId>
+        <version>16.0.5</version>
+    </parent>
+    <properties>
+        <test.config.path>${basedir}/target/config</test.config.path>
+        <maven.cargo.containerId>tomcat10x</maven.cargo.containerId>
+    </properties>
+
+    <!-- Component Definition -->
+    <name>OpenAM Server</name>
+    <description>OpenAM Server Component</description>
+    <artifactId>openam-server</artifactId>
+    <packaging>uberwar</packaging>
+
+    <!-- Build -->
+    <build>
+        <finalName>OpenAM-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven3-plugin</artifactId>
+                <version>1.10.20</version>
+                <dependencies>
+					<dependency>
+					    <groupId>org.codehaus.plexus</groupId>
+					    <artifactId>plexus-utils</artifactId>
+					    <version>3.5.1</version>
+					</dependency>
+				</dependencies>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <container>
+                                <timeout>180000</timeout>
+                            </container>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                        <configuration>
+                            <container>
+                                <timeout>60000</timeout>
+                            </container>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptor>src/assemble/merge.xml</descriptor>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                    <container>
+	                    <containerId>${maven.cargo.containerId}</containerId>
+<!--	                    <type>embedded</type>-->
+<!-- 	                    <zipUrlInstaller><url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/8.5.50/tomcat-8.5.50.zip</url></zipUrlInstaller> -->
+	                    <systemProperties>
+	                    	<file.encoding>UTF-8</file.encoding>
+							<com.sun.xml.ws.transport.http.HttpAdapter.dump>true</com.sun.xml.ws.transport.http.HttpAdapter.dump>
+							<com.iplanet.services.configpath>${test.config.path}</com.iplanet.services.configpath>
+							<com.sun.identity.configuration.directory>${test.config.path}</com.sun.identity.configuration.directory>
+							<logback.configurationFile>${basedir}/src/test/resources/logback-test.xml</logback.configurationFile>
+							<ssoadm.disabled>false</ssoadm.disabled>
+							<com.iplanet.services.debug.level>message</com.iplanet.services.debug.level>
+							<com.iplanet.services.debug.directory />
+							<com.sun.services.debug.mergeall>on</com.sun.services.debug.mergeall>
+ 							<XUI.enable>false</XUI.enable>
+<!-- 							<org.forgerock.openam.slf4j.enableTraceInMessage>true</org.forgerock.openam.slf4j.enableTraceInMessage> -->
+	                    </systemProperties>
+	                </container>
+	                <deployables>
+	                    <deployable>
+	                    	<type>war</type>
+	                        <properties>
+	                            <context>openam</context>
+	                        </properties>
+	                        <pingURL>http://localhost:8207/openam</pingURL>
+	                    </deployable>
+                        <deployable>
+                            <type>war</type>
+                            <properties>
+                                <context>am</context>
+                            </properties>
+                            <pingURL>http://localhost:8207/am</pingURL>
+                        </deployable>
+	                </deployables>
+	                <configuration>
+				    	<properties>
+				        	<cargo.rmi.port>8206</cargo.rmi.port>
+				        	<cargo.servlet.port>8207</cargo.servlet.port>
+    			        	<cargo.jvmargs>${java.surefire.options} </cargo.jvmargs>
+				        </properties>
+				    </configuration>
+                </configuration>
+            </plugin>
+		   <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.openidentityplatform.openam</groupId>
+            <artifactId>openam-server-only</artifactId>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.openidentityplatform.openam</groupId>
+            <artifactId>openam-console</artifactId>
+            <type>war</type>
+        </dependency>
+
+        <!--test dependencies-->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.13.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.20.6</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>push-perf-test</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.openidentityplatform.openam</groupId>
+                    <artifactId>openam-mock-sns</artifactId>
+                    <version>1.0.0-SNAPSHOT</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>integration-test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <systemProperties>
+                                <test.config.path>${test.config.path}</test.config.path>
+                            </systemProperties>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                </goals>
+                                <phase>integration-test</phase>
+                                <id>integration-test</id>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>compile</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                    <goal>testCompile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>with-oem</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>oem-war</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>src/assembly/oem-assembly.xml</descriptor>
+                                    </descriptors>
+                                    <filters>
+                                        <filter>src/assembly/oem.properties</filter>
+                                    </filters>
+                                    <attach>true</attach>
+                                    <archive>
+                                        <addMavenDescriptor>false</addMavenDescriptor>
+                                        <manifest>
+                                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                                        </manifest>
+                                    </archive>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jdk17.options</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <properties>
+                <maven.cargo.containerId>tomcat11x</maven.cargo.containerId>
+            </properties>
+        </profile>
+    </profiles>
+</project>

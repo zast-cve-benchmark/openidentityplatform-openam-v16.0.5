@@ -1,0 +1,20 @@
+{
+    "clientDomain": null,
+    "clientID": null,
+    "cookieMode": null,
+    "cookieStr": null,
+    "creationTime": 0,
+    "isSessionUpgrade": false,
+    "latestAccessTime": 0,
+    "maxCachingTime": 0,
+    "maxIdleTime": 0,
+    "maxSessionTime": 0,
+    "restrictedTokensBySid": {},
+    "sessionEventURLs": {},
+    "sessionID": null,
+    "sessionProperties": null,
+    "sessionState": "INVALID",
+    "sessionType": "USER",
+    "timedOutAt": 0,
+    "willExpireFlag": false
+}

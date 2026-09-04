@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<!--
+  The contents of this file are subject to the terms of the Common Development and
+  Distribution License (the License). You may not use this file except in compliance with the
+  License.
+
+  You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
+  specific language governing permission and limitations under the License.
+
+  When distributing Covered Software, include this CDDL Header Notice in each file and include
+  the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
+  Header, with the fields enclosed by brackets [] replaced by your own identifying
+  information: "Portions Copyrighted [year] [name of copyright owner]".
+
+  Copyright 2016 ForgeRock AS
+  Portions copyright 2019-2025 3A Systems LLC.
+-->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>API Explorer</title>
+    <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
+    <style>
+      html
+      {
+        box-sizing: border-box;
+        overflow: -moz-scrollbars-vertical;
+        overflow-y: scroll;
+      }
+
+      *,
+      *:before,
+      *:after
+      {
+        box-sizing: inherit;
+      }
+
+      body
+      {
+        margin:0;
+        background: #fafafa;
+      }
+    </style>
+   
+</head>
+<body class="swagger-section">
+<div id="swagger-ui"></div>
+ <script src="swagger-ui-bundle.js" type="text/javascript"></script>
+    <script src="swagger-ui-standalone-preset.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+    window.onload = function() {
+            var path = window.location.pathname.replace(new RegExp("^/|/$", "g"), "").split("/");
+            path.splice(-1);
+            var joinedPath = path.join("/");
+
+            var url = window.location.search.match(/url=([^&]+)/);
+            if (url && url.length > 1) {
+                url = decodeURIComponent(url[1]);
+            } else {
+                url = "/" + joinedPath + "/json?_api";
+            }
+
+            var getCookie = function (c_name) {
+                var i, x, y, cookies = document.cookie.split(";");
+                for (i = 0; i < cookies.length; i++) {
+                    x = cookies[i].substr(0, cookies[i].indexOf("="));
+                    y = cookies[i].substr(cookies[i].indexOf("=") + 1);
+                    x = x.replace(/^\s+|\s+$/g, "");
+                    if (x === c_name) {
+                        return unescape(y);
+                    }
+                }
+            };
+
+            const ui = SwaggerUIBundle({
+                url: url,
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                presets: [
+                  SwaggerUIBundle.presets.apis,
+                  SwaggerUIStandalonePreset
+                ],
+                plugins: [
+                  SwaggerUIBundle.plugins.DownloadUrl
+                ],
+                layout: "BaseLayout"
+              })
+              // End Swagger UI call region
+
+              window.ui = ui
+
+        };
+    </script>
+</body>
+</html>

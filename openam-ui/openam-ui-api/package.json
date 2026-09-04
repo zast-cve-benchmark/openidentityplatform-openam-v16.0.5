@@ -1,0 +1,23 @@
+{
+  "name": "openam-ui-api",
+  "version": "14.0.0",
+  "private": true,
+  "scripts": {
+    "build:production": "grunt build:prod",
+    "start": "grunt"
+  },
+  "devDependencies": {
+    "grunt": "^1.6.1",
+    "grunt-cli": "1.4.3",
+    "grunt-contrib-copy": "1.0.0",
+    "lodash": "^4.17.23"
+  },
+  "dependencies": {
+    "swagger-ui-dist": ">=5.29.0"
+  },
+  "overrides": {
+    "grunt": {
+      "lodash": "$lodash"
+    }
+  }
+}

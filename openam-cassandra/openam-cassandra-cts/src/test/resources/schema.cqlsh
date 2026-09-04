@@ -1,0 +1,107 @@
+/*---СTS----*/
+
+CREATE KEYSPACE IF NOT EXISTS cts WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}  AND durable_writes = true;
+GRANT SELECT ON KEYSPACE cts TO cassandra;
+GRANT MODIFY ON KEYSPACE cts TO cassandra;
+
+USE cts;
+
+CREATE TABLE IF NOT EXISTS tokens (
+    coreTokenId text PRIMARY KEY,
+    coreTokenDate01 timestamp,
+    coreTokenDate02 timestamp,
+    coreTokenDate03 timestamp,
+    coreTokenDate04 timestamp,
+    coreTokenDate05 timestamp,
+    coreTokenExpirationDate timestamp,
+    coreTokenInteger01 int,
+    coreTokenInteger02 int,
+    coreTokenInteger03 int,
+    coreTokenInteger04 int,
+    coreTokenInteger05 int,
+    coreTokenInteger06 int,
+    coreTokenInteger07 int,
+    coreTokenInteger08 int,
+    coreTokenInteger09 int,
+    coreTokenInteger10 int,
+    coreTokenObject blob,
+    coreTokenString01 text,
+    coreTokenString02 text,
+    coreTokenString03 text,
+    coreTokenString04 text,
+    coreTokenString05 text,
+    coreTokenString06 text,
+    coreTokenString07 text,
+    coreTokenString08 text,
+    coreTokenString09 text,
+    coreTokenString10 text,
+    coreTokenString11 text,
+    coreTokenString12 text,
+    coreTokenString13 text,
+    coreTokenString14 text,
+    coreTokenString15 text,
+    coreTokenMultiString01 text,
+    coreTokenMultiString02 text,
+    coreTokenMultiString03 text,
+    coreTokenType text,
+    coreTokenUserId text,
+    etag text,
+    createTimestamp timestamp
+) WITH bloom_filter_fp_chance = 0.01
+    AND default_time_to_live = 3600
+    AND gc_grace_seconds = 5
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy', 'compaction_window_size': '1', 'compaction_window_unit': 'MINUTES', 'max_threshold': '32', 'min_threshold': '2'}
+ ;
+DROP MATERIALIZED VIEW IF EXISTS coreTokenType;  
+DROP MATERIALIZED VIEW IF EXISTS coreTokenDate01; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenDate02; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenDate03; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenDate04; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenDate05; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenExpirationDate; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenInteger01; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenInteger02;
+CREATE MATERIALIZED VIEW IF NOT EXISTS coreTokenString03 AS SELECT * FROM cts.tokens WHERE coreTokenId IS NOT NULL and coreTokenString03 IS NOT NULL PRIMARY KEY ((coreTokenString03), coreTokenId) WITH 
+    	gc_grace_seconds = 1
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy', 'compaction_window_size': '1', 'compaction_window_unit': 'MINUTES', 'max_threshold': '32', 'min_threshold': '2'};
+DROP MATERIALIZED VIEW IF EXISTS coreTokenInteger04;
+DROP MATERIALIZED VIEW IF EXISTS coreTokenInteger05;
+DROP MATERIALIZED VIEW IF EXISTS coreTokenInteger06;
+DROP MATERIALIZED VIEW IF EXISTS coreTokenInteger07;
+DROP MATERIALIZED VIEW IF EXISTS coreTokenInteger08;
+DROP MATERIALIZED VIEW IF EXISTS coreTokenInteger09;
+DROP MATERIALIZED VIEW IF EXISTS coreTokenInteger10;         
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString01;
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString02; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString03; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString04; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString05; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString06; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString07; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString08; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString09; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString10; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString11; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString12; 
+DROP MATERIALIZED VIEW IF EXISTS coreTokenString13;
+CREATE MATERIALIZED VIEW IF NOT EXISTS coreTokenString14 AS SELECT * FROM cts.tokens WHERE coreTokenId IS NOT NULL and coreTokenString14 IS NOT NULL PRIMARY KEY ((coreTokenString14), coreTokenId) WITH 
+    	gc_grace_seconds = 1
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy', 'compaction_window_size': '1', 'compaction_window_unit': 'MINUTES', 'max_threshold': '32', 'min_threshold': '2'};
+CREATE MATERIALIZED VIEW IF NOT EXISTS coreTokenString15 AS SELECT * FROM cts.tokens WHERE coreTokenId IS NOT NULL and coreTokenString15 IS NOT NULL PRIMARY KEY ((coreTokenString15), coreTokenId) WITH 
+    	gc_grace_seconds = 1
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy', 'compaction_window_size': '1', 'compaction_window_unit': 'MINUTES', 'max_threshold': '32', 'min_threshold': '2'};
+CREATE MATERIALIZED VIEW IF NOT EXISTS coreTokenMultiString01 AS SELECT * FROM cts.tokens WHERE coreTokenId IS NOT NULL and coreTokenMultiString01 IS NOT NULL PRIMARY KEY ((coreTokenMultiString01), coreTokenId) WITH 
+    	gc_grace_seconds = 1
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy', 'compaction_window_size': '1', 'compaction_window_unit': 'MINUTES', 'max_threshold': '32', 'min_threshold': '2'};
+DROP MATERIALIZED VIEW IF EXISTS coreTokenMultiString02;
+DROP MATERIALIZED VIEW IF EXISTS coreTokenMultiString03;
+CREATE MATERIALIZED VIEW IF NOT EXISTS coreTokenUserId AS SELECT * FROM cts.tokens WHERE coreTokenId IS NOT NULL and coreTokenUserId IS NOT NULL PRIMARY KEY ((coreTokenUserId), coreTokenId) WITH 
+    	gc_grace_seconds = 1
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.TimeWindowCompactionStrategy', 'compaction_window_size': '1', 'compaction_window_unit': 'MINUTES', 'max_threshold': '32', 'min_threshold': '2'};
+DROP MATERIALIZED VIEW IF EXISTS etag;    
